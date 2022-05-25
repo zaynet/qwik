@@ -26,26 +26,26 @@ test.describe('e2e', () => {
 
       const result = await page.locator('#result');
       const content = await page.locator('#static');
-      expect(await content.innerHTML()).toEqual(SNAPSHOT);
+      await expect(content).toEqual(SNAPSHOT);
       const btn = await page.locator('#rerender');
-      expect(await btn.textContent()).toEqual('Rerender 0');
-      expect(await result.textContent()).toEqual('');
+      await expect(btn).toHaveText('Rerender 0');
+      await expect(await result.textContent()).toEqual('');
 
       // Click button
       await btn.click();
       await page.waitForTimeout(100);
 
-      expect(await content.innerHTML()).toEqual(SNAPSHOT);
-      expect(await btn.textContent()).toEqual('Rerender 1');
-      expect(await result.textContent()).toEqual(RESULT);
+      await expect(await content.innerHTML()).toEqual(SNAPSHOT);
+      await expect(await btn.textContent()).toEqual('Rerender 1');
+      await expect(await result.textContent()).toEqual(RESULT);
 
       // Click button
       await btn.click();
       await page.waitForTimeout(100);
 
-      expect(await content.innerHTML()).toEqual(SNAPSHOT);
-      expect(await btn.textContent()).toEqual('Rerender 2');
-      expect(await result.textContent()).toEqual(RESULT);
+      await expect(await content.innerHTML()).toEqual(SNAPSHOT);
+      await expect(await btn.textContent()).toEqual('Rerender 2');
+      await expect(await result.textContent()).toEqual(RESULT);
     });
   });
 
@@ -62,37 +62,37 @@ test.describe('e2e', () => {
       const contentTransparent = await page.locator('#count-transparent');
       const countWrapped = await page.locator('#count-wrapped');
 
-      expect(await contentTransparent.textContent()).toEqual('countTransparent: 0');
-      expect(await countWrapped.textContent()).toEqual('countWrapped: 0');
-      expect(await btnWrapped.textContent()).toEqual('Wrapped 0');
+      await expect(await contentTransparent.textContent()).toEqual('countTransparent: 0');
+      await expect(await countWrapped.textContent()).toEqual('countWrapped: 0');
+      await expect(await btnWrapped.textContent()).toEqual('Wrapped 0');
 
       // Click wrapped
       await btnWrapped.click();
       await page.waitForTimeout(100);
-      expect(await contentTransparent.textContent()).toEqual('countTransparent: 0');
-      expect(await countWrapped.textContent()).toEqual('countWrapped: 1');
-      expect(await btnWrapped.textContent()).toEqual('Wrapped 1');
+      await expect(await contentTransparent.textContent()).toEqual('countTransparent: 0');
+      await expect(await countWrapped.textContent()).toEqual('countWrapped: 1');
+      await expect(await btnWrapped.textContent()).toEqual('Wrapped 1');
 
       // Click wrapped
       await btnWrapped.click();
       await page.waitForTimeout(100);
-      expect(await contentTransparent.textContent()).toEqual('countTransparent: 0');
-      expect(await countWrapped.textContent()).toEqual('countWrapped: 2');
-      expect(await btnWrapped.textContent()).toEqual('Wrapped 2');
+      await expect(await contentTransparent.textContent()).toEqual('countTransparent: 0');
+      await expect(await countWrapped.textContent()).toEqual('countWrapped: 2');
+      await expect(await btnWrapped.textContent()).toEqual('Wrapped 2');
 
       // Click transparent
       await btnTransparent.click();
       await page.waitForTimeout(100);
-      expect(await contentTransparent.textContent()).toEqual('countTransparent: 1');
-      expect(await countWrapped.textContent()).toEqual('countWrapped: 2');
-      expect(await btnWrapped.textContent()).toEqual('Wrapped 2');
+      await expect(await contentTransparent.textContent()).toEqual('countTransparent: 1');
+      await expect(await countWrapped.textContent()).toEqual('countWrapped: 2');
+      await expect(await btnWrapped.textContent()).toEqual('Wrapped 2');
 
       // Click transparent
       await btnTransparent.click();
       await page.waitForTimeout(100);
-      expect(await contentTransparent.textContent()).toEqual('countTransparent: 2');
-      expect(await countWrapped.textContent()).toEqual('countWrapped: 2');
-      expect(await btnWrapped.textContent()).toEqual('Wrapped 2');
+      await expect(await contentTransparent.textContent()).toEqual('countTransparent: 2');
+      await expect(await countWrapped.textContent()).toEqual('countWrapped: 2');
+      await expect(await btnWrapped.textContent()).toEqual('Wrapped 2');
     });
   });
 
@@ -108,23 +108,23 @@ test.describe('e2e', () => {
       const content3 = await page.locator('#btn3');
       const btnCount = await page.locator('#btn-count');
 
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 0');
-      expect((await content2.innerText()).trim()).toEqual('START 0');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 0');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 0');
+      await expect((await content2.innerText()).trim()).toEqual('START 0');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 0');
 
       // Count
       await btnCount.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
-      expect((await content2.innerText()).trim()).toEqual('START 1');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 1');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
+      await expect((await content2.innerText()).trim()).toEqual('START 1');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 1');
 
       // Count
       await btnCount.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 2');
-      expect((await content2.innerText()).trim()).toEqual('START 2');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 2');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 2');
+      await expect((await content2.innerText()).trim()).toEqual('START 2');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 2');
     });
 
     test('should toggle buttons', async ({ page }) => {
@@ -137,16 +137,16 @@ test.describe('e2e', () => {
       // btnToggleButtons
       await btnToggleButtons.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
-      expect((await content2.innerText()).trim()).toEqual('START 0');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content2.innerText()).trim()).toEqual('START 0');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
 
       // btnToggleButtons
       await btnToggleButtons.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 0');
-      expect((await content2.innerText()).trim()).toEqual('START 0');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 0');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 0');
+      await expect((await content2.innerText()).trim()).toEqual('START 0');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 0');
     });
 
     test('should toggle buttons with count', async ({ page }) => {
@@ -160,37 +160,37 @@ test.describe('e2e', () => {
       // btnToggleButtons
       await btnToggleButtons.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
-      expect((await content2.innerText()).trim()).toEqual('START 0');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content2.innerText()).trim()).toEqual('START 0');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
 
       // btnToggleButtons
       await btnCount.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
-      expect((await content2.innerText()).trim()).toEqual('START 1');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content2.innerText()).trim()).toEqual('START 1');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
 
       // btnToggleButtons
       await btnToggleButtons.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
-      expect((await content2.innerText()).trim()).toEqual('START 1');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 1');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
+      await expect((await content2.innerText()).trim()).toEqual('START 1');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 1');
 
       // btnToggleButtons
       await btnToggleButtons.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
-      expect((await content2.innerText()).trim()).toEqual('START 1');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content2.innerText()).trim()).toEqual('START 1');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
 
       // btnToggleButtons
       await btnToggleButtons.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
-      expect((await content2.innerText()).trim()).toEqual('START 1');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 1');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
+      await expect((await content2.innerText()).trim()).toEqual('START 1');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 1');
     });
 
     test('should toggle content', async ({ page }) => {
@@ -204,17 +204,17 @@ test.describe('e2e', () => {
       // btnToggleButtons
       await btnToggleContent.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
-      expect((await content2.innerText()).trim()).toEqual('Placeholder Start');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content2.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
 
       // btnToggleButtons
       await btnCount.click();
       await btnToggleContent.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
-      expect((await content2.innerText()).trim()).toEqual('START 1');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 1');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
+      await expect((await content2.innerText()).trim()).toEqual('START 1');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 1');
     });
 
     test('should toggle content and buttons', async ({ page }) => {
@@ -233,9 +233,9 @@ test.describe('e2e', () => {
       await page.waitForTimeout(100);
       await btnToggleButtons.click();
 
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
-      expect((await content2.innerText()).trim()).toEqual('Placeholder Start');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content2.innerText()).trim()).toEqual('Placeholder Start');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start');
     });
 
     test('should toggle thing + count', async ({ page }) => {
@@ -250,15 +250,15 @@ test.describe('e2e', () => {
       await btnToggleThing.click();
       await btnCount.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
-      expect((await content2.innerText()).trim()).toEqual('START 1');
-      expect((await content3.innerText()).trim()).toEqual('');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
+      await expect((await content2.innerText()).trim()).toEqual('START 1');
+      await expect((await content3.innerText()).trim()).toEqual('');
 
       await btnToggleThing.click();
       await page.waitForTimeout(100);
-      expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
-      expect((await content2.innerText()).trim()).toEqual('START 1');
-      expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 1');
+      await expect((await content1.innerText()).trim()).toEqual('Placeholder Start\nDEFAULT 1');
+      await expect((await content2.innerText()).trim()).toEqual('START 1');
+      await expect((await content3.innerText()).trim()).toEqual('Placeholder Start\nINSIDE THING 1');
     });
   });
 
@@ -270,7 +270,7 @@ test.describe('e2e', () => {
     test('should render correctly', async ({ page }) => {
       const body = await page.locator('body');
 
-      expect((await body.innerText()).trim()).toEqual('A\nB\nLight: wow!');
+      await expect((await body.innerText()).trim()).toEqual('A\nB\nLight: wow!');
     });
   });
 
@@ -288,33 +288,33 @@ test.describe('e2e', () => {
       const debounced = await page.locator('#debounced');
       const addButton = page.locator('#add');
 
-      expect(await server.textContent()).toEqual('comes from server');
-      expect(await parent.textContent()).toEqual('2 / 4');
-      expect(await child.textContent()).toEqual('2 / 4');
-      expect(await debounced.textContent()).toEqual('Debounced: 0');
+      await expect(await server.textContent()).toEqual('comes from server');
+      await expect(await parent.textContent()).toEqual('2 / 4');
+      await expect(await child.textContent()).toEqual('2 / 4');
+      await expect(await debounced.textContent()).toEqual('Debounced: 0');
 
       await addButton.click();
       await page.waitForTimeout(100);
 
-      expect(await server.textContent()).toEqual('comes from server');
-      expect(await parent.textContent()).toEqual('3 / 6');
-      expect(await child.textContent()).toEqual('3 / 6');
-      expect(await debounced.textContent()).toEqual('Debounced: 0');
+      await expect(await server.textContent()).toEqual('comes from server');
+      await expect(await parent.textContent()).toEqual('3 / 6');
+      await expect(await child.textContent()).toEqual('3 / 6');
+      await expect(await debounced.textContent()).toEqual('Debounced: 0');
 
       await addButton.click();
       await page.waitForTimeout(100);
 
-      expect(await server.textContent()).toEqual('comes from server');
-      expect(await parent.textContent()).toEqual('4 / 8');
-      expect(await child.textContent()).toEqual('4 / 8');
-      expect(await debounced.textContent()).toEqual('Debounced: 0');
+      await expect(await server.textContent()).toEqual('comes from server');
+      await expect(await parent.textContent()).toEqual('4 / 8');
+      await expect(await child.textContent()).toEqual('4 / 8');
+      await expect(await debounced.textContent()).toEqual('Debounced: 0');
 
       // Wait for debouncer
       await page.waitForTimeout(2000);
-      expect(await server.textContent()).toEqual('comes from server');
-      expect(await parent.textContent()).toEqual('4 / 8');
-      expect(await child.textContent()).toEqual('4 / 8');
-      expect(await debounced.textContent()).toEqual('Debounced: 8');
+      await expect(await server.textContent()).toEqual('comes from server');
+      await expect(await parent.textContent()).toEqual('4 / 8');
+      await expect(await child.textContent()).toEqual('4 / 8');
+      await expect(await debounced.textContent()).toEqual('Debounced: 8');
     });
   });
 
@@ -333,11 +333,11 @@ test.describe('e2e', () => {
       const btnLevel2Increment = await page.locator('.level2-increment3').nth(0);
       const btnLevel2Increment2 = await page.locator('.level2-increment3').nth(1);
 
-      expect(await level2State1.allTextContents()).toEqual([
+      await expect(await level2State1.allTextContents()).toEqual([
         'ROOT / state1 = 0',
         'ROOT / state1 = 0',
       ]);
-      expect(await level2State2.allTextContents()).toEqual([
+      await expect(await level2State2.allTextContents()).toEqual([
         'ROOT / state2 = 0',
         'ROOT / state2 = 0',
       ]);
@@ -345,11 +345,11 @@ test.describe('e2e', () => {
       await btnRootIncrement1.click();
       await page.waitForTimeout(100);
 
-      expect(await level2State1.allTextContents()).toEqual([
+      await expect(await level2State1.allTextContents()).toEqual([
         'ROOT / state1 = 1',
         'ROOT / state1 = 1',
       ]);
-      expect(await level2State2.allTextContents()).toEqual([
+      await expect(await level2State2.allTextContents()).toEqual([
         'ROOT / state2 = 0',
         'ROOT / state2 = 0',
       ]);
@@ -357,11 +357,11 @@ test.describe('e2e', () => {
       await btnRootIncrement2.click();
       await page.waitForTimeout(100);
 
-      expect(await level2State1.allTextContents()).toEqual([
+      await expect(await level2State1.allTextContents()).toEqual([
         'ROOT / state1 = 1',
         'ROOT / state1 = 1',
       ]);
-      expect(await level2State2.allTextContents()).toEqual([
+      await expect(await level2State2.allTextContents()).toEqual([
         'ROOT / state2 = 1',
         'ROOT / state2 = 1',
       ]);
@@ -375,26 +375,26 @@ test.describe('e2e', () => {
       const level3State2 = await page.locator('.level3-state2');
       const level3State3 = await page.locator('.level3-state3');
 
-      expect(await level2State1.allTextContents()).toEqual([
+      await expect(await level2State1.allTextContents()).toEqual([
         'ROOT / state1 = 1',
         'ROOT / state1 = 1',
       ]);
-      expect(await level2State2.allTextContents()).toEqual([
+      await expect(await level2State2.allTextContents()).toEqual([
         'ROOT / state2 = 1',
         'ROOT / state2 = 1',
       ]);
 
-      expect(await level3State1.allTextContents()).toEqual([
+      await expect(await level3State1.allTextContents()).toEqual([
         'Level2 / state1 = 0',
         'Level2 / state1 = 0',
         'Level2 / state1 = 0',
       ]);
-      expect(await level3State2.allTextContents()).toEqual([
+      await expect(await level3State2.allTextContents()).toEqual([
         'ROOT / state2 = 1',
         'ROOT / state2 = 1',
         'ROOT / state2 = 1',
       ]);
-      expect(await level3State3.allTextContents()).toEqual([
+      await expect(await level3State3.allTextContents()).toEqual([
         'Level2 / state3 = 2',
         'Level2 / state3 = 2',
         'Level2 / state3 = 1',
