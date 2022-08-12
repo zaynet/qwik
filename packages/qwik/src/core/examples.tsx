@@ -99,7 +99,7 @@ export const CmpInline = component$(() => {
     useOn(
       'click',
       $((event) => {
-        console.log('clicked host element', event);
+        console.log('clicked first element', event);
       })
     );
   }

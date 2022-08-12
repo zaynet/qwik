@@ -60,11 +60,14 @@ export default function (opts: RenderToStreamOptions) {
       {
         debug: true,
         containerTagName: 'container',
-        // streaming: {
-        //   inOrder: {
-        //     buffering: 'marks',
-        //   },
-        // },
+        streaming: {
+          inOrder: {
+            // strategy: 'disabled',
+            strategy: 'auto',
+            minimunChunkSize: 0,
+            initialChunkSize: 0,
+          },
+        },
         qwikLoader: {
           include: url.searchParams.get('loader') === 'false' ? 'never' : 'auto',
           events: ['click'],
@@ -89,7 +92,10 @@ export default function (opts: RenderToStreamOptions) {
       ...opts,
       streaming: {
         inOrder: {
-          buffering: 'marks',
+          // strategy: 'disabled',
+          strategy: 'auto',
+          minimunChunkSize: 0,
+          initialChunkSize: 0,
         },
       },
     }

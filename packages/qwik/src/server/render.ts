@@ -34,7 +34,7 @@ export async function renderToStream(
   let stream = opts.stream;
   let bufferSize = 0;
   let totalSize = 0;
-  let networkFlushes = 0;
+  let flushes = 0;
   let firstFlushTime = 0;
   const doc = createSimpleDocument() as Document;
   const inOrderStreaming = opts.streaming?.inOrder ?? {
@@ -50,8 +50,8 @@ export async function renderToStream(
     buffer.forEach((chunk) => nativeStream.write(chunk));
     buffer.length = 0;
     bufferSize = 0;
-    networkFlushes++;
-    if (networkFlushes === 1) {
+    flushes++;
+    if (flushes === 1) {
       firstFlushTime = firstFlushTimer();
     }
   }
@@ -78,7 +78,7 @@ export async function renderToStream(
           } else if (count > 0 && chunk === '<!--qkssr-po-->') {
             count--;
           }
-          const chunkSize = networkFlushes === 0 ? initialChunkSize : minimunChunkSize;
+          const chunkSize = flushes === 0 ? initialChunkSize : minimunChunkSize;
           if (count === 0 && bufferSize >= chunkSize) {
             flush();
           }
@@ -90,6 +90,8 @@ export async function renderToStream(
   if (containerTagName === 'html') {
     stream.write(DOCTYPE);
   } else {
+    stream.write('<!---->');
+
     if (opts.qwikLoader) {
       if (opts.qwikLoader.include === undefined) {
         opts.qwikLoader.include = 'never';
@@ -172,7 +174,7 @@ export async function renderToStream(
   const result: RenderToStreamResult = {
     prefetchResources,
     snapshotResult,
-    flushes: networkFlushes,
+    flushes,
     size: totalSize,
     timing: {
       render: renderTime,
