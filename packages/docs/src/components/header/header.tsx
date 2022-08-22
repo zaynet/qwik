@@ -34,14 +34,7 @@ export const Header = component$(() => {
           <DocSearch
             appId={import.meta.env.VITE_ALGOLIA_APP_ID}
             apiKey={import.meta.env.VITE_ALGOLIA_SEARCH_KEY}
-            indexName="docsearch-legacy"
-            transformItems$={(items: any[]) => {
-              return items.map((item) => ({
-                ...item,
-                // TODO: remove this after migrate to algolia crawler
-                url: item.url?.replace('http://host.docker.internal:3000', window.origin),
-              }));
-            }}
+            indexName={import.meta.env.VITE_ALGOLIA_INDEX}
           />
         </div>
         <button onClick$={toggleMenu} class="mobile-menu" type="button">
