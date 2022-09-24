@@ -6,45 +6,64 @@ import { QScopedStyle } from '../util/markers';
 import { directGetAttribute } from '../render/fast-calls';
 import { isArray } from '../util/types';
 import { assertTrue } from '../assert/assert';
+import { EMPTY_ARRAY } from '../util/flyweight';
 
 const ON_PROP_REGEX = /^(on|window:|document:)/;
+
+export type Listener = [eventName: string, qrl: QRLInternal];
 
 export const isOnProp = (prop: string): boolean => {
   return prop.endsWith('$') && ON_PROP_REGEX.test(prop);
 };
 
 export const addQRLListener = (
-  listenersMap: Record<string, QRLInternal<any>[]>,
-  prop: string,
-  input: QRLInternal[]
-): boolean => {
-  let existingListeners = listenersMap[prop];
-  if (!existingListeners) {
-    listenersMap[prop] = existingListeners = [];
-  }
-  for (const qrl of input) {
-    const hash = qrl.$hash$;
+  listeners: Listener[],
+  add: Listener[]
+) => {
+  for (const entry of add) {
+    const prop = entry[0];
+    const hash = entry[1].$hash$;
     let replaced = false;
-    for (let i = 0; i < existingListeners.length; i++) {
-      const existing = existingListeners[i];
-      if (existing.$hash$ === hash) {
-        existingListeners.splice(i, 1, qrl);
+    for (let i = 0; i < listeners.length; i++) {
+      const existing = listeners[i];
+      if (existing[0] === prop && existing[1].$hash$ === hash) {
+        listeners.splice(i, 1, entry);
         replaced = true;
         break;
       }
     }
     if (!replaced) {
-      existingListeners.push(qrl);
+      listeners.push(entry);
     }
   }
-  return false;
 };
 
-export const setEvent = (listenerMap: Record<string, QRLInternal[]>, prop: string, input: any) => {
+export const groupListeners = (listeners: Listener[]): [string, QRLInternal[]][] => {
+  if (listeners.length === 0) {
+    return EMPTY_ARRAY;
+  }
+  if (listeners.length === 1) {
+    const listener = listeners[0];
+    return [[listener[0], [listener[1]]]];
+  }
+
+  const keys: string[] = [];
+  for (let i = 0; i< listeners.length; i++) {
+    const eventName = listeners[i][0];
+    if (!keys.includes(eventName)) {
+      keys.push(eventName);
+    }
+  }
+  return keys.map(eventName => {
+    return [eventName, listeners.filter(l => l[0] === eventName).map(a => a[1])]
+  });
+}
+
+export const setEvent = (existingListeners: Listener[], prop: string, input: any) => {
   assertTrue(prop.endsWith('$'), 'render: event property does not end with $', prop);
-  const qrls = isArray(input) ? input.map(ensureQrl) : [ensureQrl(input)];
   prop = normalizeOnProp(prop.slice(0, -1));
-  addQRLListener(listenerMap, prop, qrls);
+  const listeners = isArray(input) ? input.map(q => [prop, ensureQrl(q)] as Listener) : [[prop, ensureQrl(input)]] as Listener[];
+  addQRLListener(existingListeners, listeners);
   return prop;
 };
 
@@ -55,9 +74,9 @@ const ensureQrl = (value: any) => {
 export const getDomListeners = (
   ctx: QContext,
   containerEl: Element
-): Record<string, QRLInternal[]> => {
+): Listener[] => {
   const attributes = (ctx.$element$ as Element).attributes;
-  const listeners: Record<string, QRLInternal[]> = {};
+  const listeners: Listener[] = [];
   for (let i = 0; i < attributes.length; i++) {
     const { name, value } = attributes.item(i)!;
     if (
@@ -65,17 +84,13 @@ export const getDomListeners = (
       name.startsWith('on-window:') ||
       name.startsWith('on-document:')
     ) {
-      let array = listeners[name];
-      if (!array) {
-        listeners[name] = array = [];
-      }
       const urls = value.split('\n');
       for (const url of urls) {
         const qrl = parseQRL(url, containerEl);
         if (qrl.$capture$) {
           inflateQrl(qrl, ctx);
         }
-        array.push(qrl);
+        listeners.push([name, qrl]);
       }
     }
   }

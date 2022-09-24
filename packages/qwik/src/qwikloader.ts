@@ -42,10 +42,11 @@ export const qwikLoader = (doc: Document, hasInitialized?: number) => {
       ev.preventDefault();
     }
     const attrName = 'on' + onPrefix + ':' + eventName;
-    const qrls = ((element as any)['_qc_'] as QContext)?.li[attrName];
-    if (qrls) {
+    const ctx = (element as any)['_qc_'] as QContext | undefined;
+    const qrls = ctx?.li.filter(li => li[0] === attrName);
+    if (qrls && qrls.length > 0) {
       for (const q of qrls) {
-        await q.getFn([element, ev], () => element.isConnected)(ev, element);
+        await q[1].getFn([element, ev], () => element.isConnected)(ev, element);
       }
       return;
     }
