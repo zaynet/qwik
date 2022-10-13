@@ -105,6 +105,7 @@ export async function configureDevServer(
 
           const renderOpts: RenderToStreamOptions = {
             debug: true,
+            lang: envData.lang,
             stream: res,
             snapshot: !isClientDevOnly,
             manifest: isClientDevOnly ? undefined : manifest,

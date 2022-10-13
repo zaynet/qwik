@@ -33,7 +33,7 @@ export const renderComponent = (
   return then(executeComponent(rCtx, elCtx), (res) => {
     const staticCtx = rCtx.$static$;
     const newCtx = res.rCtx;
-    const invocatinContext = newInvokeContext(hostElement);
+    const invocatinContext = newInvokeContext(rCtx.$static$.$lang$, hostElement);
     staticCtx.$hostElements$.add(hostElement);
     invocatinContext.$subscriber$ = hostElement;
     invocatinContext.$renderCtx$ = newCtx;

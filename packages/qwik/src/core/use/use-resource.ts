@@ -116,7 +116,7 @@ export const useResourceQrl = <T>(
   ) as ResourceDescriptor<any>;
   const previousWait = Promise.all(ctx.$waitOn$.slice());
   const elCtx = getContext(el);
-  runResource(watch, containerState, previousWait);
+  runResource(watch, containerState, ctx.$renderCtx$, previousWait);
   if (!elCtx.$watches$) {
     elCtx.$watches$ = [];
   }

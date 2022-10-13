@@ -132,6 +132,7 @@ export interface DocumentStyle {
 export interface DocumentHeadProps<T = unknown> extends RouteLocation {
   data: T;
   head: ResolvedDocumentHead;
+  withLang: <T>(fn: () => T) => T;
 }
 
 /**
@@ -248,6 +249,13 @@ export interface ResponseContext {
   status: number;
 
   /**
+   * Which language the content is in.
+   *
+   * The language value can be retrieved from selected methods using `getLang()`:
+   */
+  lang: string | undefined;
+
+  /**
    * HTTP response headers.
    *
    * https://developer.mozilla.org/en-US/docs/Glossary/Response_header
@@ -346,9 +354,12 @@ export interface StaticGenerate {
 export interface QwikCityRenderDocument extends Document {}
 
 export interface QwikCityEnvData {
+  mode: QwikCityMode;
   params: RouteParams;
   response: EndpointResponse;
 }
+
+export type QwikCityMode = 'dev' | 'static' | 'server';
 
 export type GetEndpointData<T> = T extends RequestHandler<infer U> ? U : T;
 

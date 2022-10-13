@@ -75,6 +75,7 @@ export interface SSRContext {
   projectedChildren: Record<string, any[] | undefined> | undefined;
   projectedContext: SSRContext | undefined;
   hostCtx: QContext | null;
+  lang: string;
   invocationContext?: InvokeContext | undefined;
   $contexts$: QContext[];
   $pendingListeners$: [string, QRLInternal][];
@@ -96,7 +97,7 @@ export const createDocument = () => {
  */
 export const renderSSR = async (node: JSXNode, opts: RenderSSROptions) => {
   const root = opts.containerTagName;
-  const containerEl = createContext(1).$element$;
+  const containerEl = createContext(1, { 'q:lang': opts?.envData?.lang }).$element$;
   const containerState = createContainerState(containerEl as Element);
   const doc = createDocument();
   const rCtx = createRenderContext(doc as any, containerState);
@@ -110,6 +111,7 @@ export const renderSSR = async (node: JSXNode, opts: RenderSSROptions) => {
     invocationContext: undefined,
     headNodes: root === 'html' ? headNodes : [],
     $pendingListeners$: [],
+    lang: opts.envData?.lang,
   };
 
   const containerAttributes: Record<string, any> = {
@@ -118,6 +120,7 @@ export const renderSSR = async (node: JSXNode, opts: RenderSSROptions) => {
     'q:version': version ?? 'dev',
     'q:render': qDev ? 'ssr-dev' : 'ssr',
     'q:base': opts.base,
+    'q:lang': opts.envData?.lang,
     children: root === 'html' ? [node] : [headNodes, node],
   };
   containerState.$envData$ = {
@@ -317,7 +320,7 @@ export const renderSSRComponent = (
   return then(executeComponent(ssrCtx.rCtx, elCtx), (res) => {
     const hostElement = elCtx.$element$;
     const newCtx = res.rCtx;
-    const invocationContext = newInvokeContext(hostElement, undefined);
+    const invocationContext = newInvokeContext(ssrCtx.lang, hostElement, undefined);
     invocationContext.$subscriber$ = hostElement;
     invocationContext.$renderCtx$ = newCtx;
     const projectedContext: SSRContext = {
@@ -421,10 +424,13 @@ const splitProjectedChildren = (children: any, ssrCtx: SSRContext) => {
   return slotMap;
 };
 
-export const createContext = (nodeType: 1 | 111) => {
+export const createContext = (nodeType: 1 | 111, attrs?: Record<string, any>) => {
   const elm = {
     nodeType,
     [Q_CTX]: null,
+    attributes: attrs
+      ? Object.keys(attrs).map((key) => ({ name: key, value: attrs[key] }))
+      : undefined,
   };
   seal(elm);
   return getContext(elm as any);

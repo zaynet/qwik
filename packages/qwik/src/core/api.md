@@ -125,6 +125,11 @@ export interface FunctionComponent<P = Record<string, any>> {
     (props: P, key: string | null): JSXNode | null;
 }
 
+// Warning: (ae-internal-missing-underscore) The name "getLang" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export function getLang(defaultLocale?: string): string;
+
 // @alpha
 export const getPlatform: () => CorePlatform;
 
@@ -752,6 +757,11 @@ export interface WatchCtx {
 
 // @public (undocumented)
 export type WatchFn = (ctx: WatchCtx) => ValueOrPromise<void | (() => void)>;
+
+// Warning: (ae-internal-missing-underscore) The name "withLang" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export function withLang<T>(lang: string, fn: () => T): T;
 
 // @internal (undocumented)
 export const _wrapSignal: <T extends Record<any, any>, P extends keyof T>(obj: T, prop: P) => any;

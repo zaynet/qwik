@@ -15,6 +15,7 @@ export function createQwikCity(opts: QwikCityNetlifyOptions) {
   async function onRequest(request: Request, context: Context) {
     try {
       const requestCtx: QwikCityRequestContext<Response> = {
+        lang: undefined,
         url: new URL(request.url),
         request,
         response: (status, headers, body) => {
@@ -51,7 +52,7 @@ export function createQwikCity(opts: QwikCityNetlifyOptions) {
       };
 
       // send request to qwik city request handler
-      const handledResponse = await requestHandler<Response>(requestCtx, opts);
+      const handledResponse = await requestHandler<Response>('server', requestCtx, opts);
       if (handledResponse) {
         return handledResponse;
       }

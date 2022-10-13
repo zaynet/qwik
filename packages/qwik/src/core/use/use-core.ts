@@ -1,14 +1,14 @@
-import { isArray } from '../util/types';
-import { assertDefined } from '../error/assert';
 import type { QwikDocument } from '../document';
-import { QContainerSelector, RenderEvent } from '../util/markers';
-import type { QRL } from '../qrl/qrl.public';
+import { assertDefined } from '../error/assert';
 import { qError, QError_useInvokeContext, QError_useMethodOutsideContext } from '../error/error';
-import type { RenderContext } from '../render/types';
-import type { SubscriberEffect, SubscriberHost } from './use-watch';
+import type { QRL } from '../qrl/qrl.public';
 import type { QwikElement } from '../render/dom/virtual-element';
-import { seal } from '../util/qdev';
+import type { RenderContext } from '../render/types';
+import { QContainerSelector, QLangAttr, RenderEvent } from '../util/markers';
 import { isPromise } from '../util/promises';
+import { seal } from '../util/qdev';
+import { isArray } from '../util/types';
+import type { SubscriberEffect, SubscriberHost } from './use-watch';
 
 declare const document: QwikDocument;
 
@@ -42,6 +42,7 @@ export interface InvokeContext {
   $waitOn$: Promise<any>[] | undefined;
   $subscriber$: SubscriberEffect | SubscriberHost | null | undefined;
   $renderCtx$: RenderContext | undefined;
+  $lang$: string | undefined;
 }
 
 let _context: InvokeContext | undefined;
@@ -122,10 +123,13 @@ export const waitAndRun = (ctx: RenderInvokeContext, callback: () => any) => {
 
 export const newInvokeContextFromTuple = (context: InvokeTuple) => {
   const element = context[0];
-  return newInvokeContext(undefined, element, context[1], context[2]);
+  const container = element.closest(QContainerSelector);
+  const lang = container?.getAttribute(QLangAttr) || undefined;
+  return newInvokeContext(lang, undefined, element, context[1], context[2]);
 };
 
 export const newInvokeContext = (
+  lang?: string,
   hostElement?: QwikElement,
   element?: Element,
   event?: any,
@@ -142,6 +146,7 @@ export const newInvokeContext = (
     $renderCtx$: undefined,
     $subscriber$: undefined,
     $waitOn$: undefined,
+    $lang$: lang,
   };
   seal(ctx);
   return ctx;

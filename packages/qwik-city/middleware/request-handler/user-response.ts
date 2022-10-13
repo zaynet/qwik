@@ -132,6 +132,12 @@ export async function loadUserResponse(
           get headers() {
             return userResponse.headers;
           },
+          get lang() {
+            return requestCtx.lang;
+          },
+          set lang(lang) {
+            requestCtx.lang = lang;
+          },
           redirect,
           error,
         };
