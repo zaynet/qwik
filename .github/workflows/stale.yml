@@ -1,0 +1,57 @@
+name: 'Close stale issues and PRs'
+on:
+  schedule:
+    - cron: '30 1 * * *'
+
+jobs:
+  stale-need-reproduction:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v6
+        with:
+          any-of-labels: 'needs reproduction'
+          stale-message: >
+            Thanks for the issue! This issue has been labeled as `needs reproduction`. This label
+            is added to issues that need a code reproduction.
+            Please provide a link via [qwik.new](https://qwik.new/) or a link to a repo that can reproduce the problem you ran into. `npm create qwik@latest` can be used as a starter template. A [minimal reproduction](https://stackoverflow.com/help/minimal-reproducible-example) is required ([Why?](https://antfu.me/posts/why-reproductions-are-required)). If a report is vague (e.g. just a generic error message) and has no reproduction, it will receive a "need reproduction" label. If no reproduction is provided after 10 days, it will be auto-closed.
+
+          close-message: >
+            Thanks for the issue! This issue is being closed due to the lack of a code reproduction. If this is still
+            an issue with the latest version of Qwik, please create a new issue and ensure the
+            template is fully filled out.
+            Thank you for using Qwik!
+
+          days-before-stale: 0
+          days-before-close: 10
+
+
+  missing-template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v6
+        with:
+          any-of-labels: 'missing template'
+          stale-message: >
+            Thanks for the issue! It appears that you have not filled out the provided issue template. We use this issue
+            template in order to gather more information and further assist you. Please update this issue or it will be close in 10 days.
+            Thank you for using Qwik!
+          close-message: 'This issue/PR was closed because it has been stalled for 10 days with no activity.'
+          days-before-stale: 0
+          days-before-close: 10
+
+
+  stale-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v6
+        with:
+          days-before-stale: 365
+          days-before-close: 10
+          exempt-all-milestones: true
+          exempt-all-assignees: true
+          stale-message: >
+            Thanks for the issue! This issue is being closed due to inactivity. If this is still
+            an issue with the latest version of Qwik, please create a new issue and ensure the
+            template is fully filled out.
+            Thank you for using Qwik!
+          close-message: 'This issue/PR was closed because it has been stalled for 10 days with no activity.'
