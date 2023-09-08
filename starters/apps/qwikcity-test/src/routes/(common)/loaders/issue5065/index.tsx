@@ -19,6 +19,16 @@ export default component$(() => {
   //
 
   const fooZodAction = useZodObjectAction();
-  fooZodAction.value! satisfies SimpleObject;
+  if (fooZodAction.value?.failed) {
+    fooZodAction.value! satisfies {
+      formErrors: string[];
+      fieldErrors: {};
+      failed: true;
+      value?: undefined;
+      optional?: undefined;
+    };
+  } else {
+    fooZodAction.value! satisfies SimpleObject;
+  }
   return <>TEST</>;
 });
