@@ -53,6 +53,7 @@ export function qwikVite(qwikViteOpts: QwikVitePluginOptions = {}): any {
   let rootDir: string | null = null;
 
   let ssrOutDir: string | null = null;
+  const fileFilter = qwikViteOpts.fileFilter || (() => true);
   const injections: GlobalInjections[] = [];
   const qwikPlugin = createPlugin(qwikViteOpts.optimizerOptions);
 
@@ -410,7 +411,7 @@ export function qwikVite(qwikViteOpts: QwikVitePluginOptions = {}): any {
     },
 
     resolveId(id, importer, resolveIdOpts) {
-      if (id.startsWith('\0')) {
+      if (id.startsWith('\0') || !fileFilter(id, 'resolveId')) {
         return null;
       }
       if (isClientDevOnly && id === VITE_CLIENT_MODULE) {
@@ -420,7 +421,7 @@ export function qwikVite(qwikViteOpts: QwikVitePluginOptions = {}): any {
     },
 
     load(id, loadOpts) {
-      if (id.startsWith('\0')) {
+      if (id.startsWith('\0') || !fileFilter(id, 'load')) {
         return null;
       }
 
@@ -439,7 +440,7 @@ export function qwikVite(qwikViteOpts: QwikVitePluginOptions = {}): any {
     },
 
     transform(code, id, transformOpts) {
-      if (id.startsWith('\0')) {
+      if (id.startsWith('\0') || !fileFilter(id, 'transform')) {
         return null;
       }
       if (isClientDevOnly) {
@@ -813,6 +814,9 @@ const VITE_CLIENT_MODULE = `@builder.io/qwik/vite-client`;
 const CLIENT_DEV_INPUT = 'entry.dev.tsx';
 
 interface QwikVitePluginCommonOptions {
+  /** Predicate function to filter out files from the optimizer */
+  fileFilter?: (id: string, hook: string) => boolean;
+
   /**
    * Prints verbose Qwik plugin debug logs.
    *
