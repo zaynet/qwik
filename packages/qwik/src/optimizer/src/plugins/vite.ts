@@ -814,7 +814,10 @@ const VITE_CLIENT_MODULE = `@builder.io/qwik/vite-client`;
 const CLIENT_DEV_INPUT = 'entry.dev.tsx';
 
 interface QwikVitePluginCommonOptions {
-  /** Predicate function to filter out files from the optimizer */
+  /**
+   * Predicate function to filter out files from the optimizer. hook for resolveId, load, and
+   * transform
+   */
   fileFilter?: (id: string, hook: string) => boolean;
 
   /**
