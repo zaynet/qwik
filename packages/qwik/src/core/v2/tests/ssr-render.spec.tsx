@@ -10,6 +10,7 @@ import {
 import { SSRComment, SSRRaw, SSRStream, SSRStreamBlock } from '../../render/jsx/utils.public';
 import { delay } from '../../util/promises';
 import { Slot, useSignal } from '@builder.io/qwik';
+import { $ } from '../../qrl/qrl.public';
 
 const debug = false; //true;
 Error.stackTraceLimit = 100;
@@ -101,6 +102,21 @@ describe('v2 ssr render', () => {
     expect(document.querySelector('div[data-render]')?.outerHTML).not.toContain(
       '<!--q:container=html--><div>hello</div><!--/q:container-->'
     );
+  });
+
+  it('should retain qrl.dev', async () => {
+    const Cmp = component$(() => {
+      const foo = $('myFoo');
+      expect(foo).toHaveProperty('dev');
+      return <button onClick$={() => expect(foo).toHaveProperty('dev')} />;
+    });
+    const { vNode, document } = await ssrRenderToDom(<Cmp />, { debug });
+    expect(vNode).toMatchVDOM(
+      <Component>
+        <button></button>
+      </Component>
+    );
+    await trigger(document.body, 'button', 'click');
   });
 
   describe('component', () => {
