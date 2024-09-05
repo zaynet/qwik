@@ -309,6 +309,9 @@ export interface PageModule extends RouteModule {
 export type PathParams = Record<string, string>;
 
 // @public (undocumented)
+export type PreventNavigateCallback = (url?: number | URL) => ValueOrPromise<boolean>;
+
+// @public (undocumented)
 export const QWIK_CITY_SCROLLER = "_qCityScroller";
 
 // @public (undocumented)
@@ -402,7 +405,7 @@ export interface RouteLocation {
 }
 
 // @public (undocumented)
-export type RouteNavigate = QRL<(path?: string | number, options?: {
+export type RouteNavigate = QRL<(path?: string | number | URL, options?: {
     type?: Exclude<NavigationType, 'initial'>;
     forceReload?: boolean;
     replaceState?: boolean;
@@ -470,6 +473,14 @@ export const useLocation: () => RouteLocation;
 
 // @public (undocumented)
 export const useNavigate: () => RouteNavigate;
+
+// @public
+export const usePreventNavigate$: (qrl: PreventNavigateCallback) => void;
+
+// Warning: (ae-internal-missing-underscore) The name "usePreventNavigateQrl" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export const usePreventNavigateQrl: (fn: QRL<PreventNavigateCallback>) => void;
 
 // Warning: (ae-forgotten-export) The symbol "ValidatorConstructor" needs to be exported by the entry point index.d.ts
 //
