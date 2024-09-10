@@ -1,5 +1,17 @@
 # @builder.io/qwik-city
 
+## 1.9.0
+
+### Minor Changes
+
+- ✨ add `valibot# @builder.io/qwik-city validator and fix types of `zod# @builder.io/qwik-city implementation (by [@fabian-hiller](https://github.com/fabian-hiller) in [#6752](https://github.com/QwikDev/qwik/pull/6752))
+
+### Patch Changes
+
+- added .ico to be detected by isStaticFile (by [@intellix](https://github.com/intellix) in [#6860](https://github.com/QwikDev/qwik/pull/6860))
+
+- 🐞🩹 fixed delays caused from inefficient Service Worker prefetching (buffering) (by [@shairez](https://github.com/shairez) in [#6863](https://github.com/QwikDev/qwik/pull/6863))
+
 ## 1.8.0
 
 ## 1.7.3
