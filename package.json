@@ -153,7 +153,7 @@
     "syncpack": "13.0.0",
     "terser": "5.32.0",
     "tsm": "2.3.0",
-    "typescript": "5.4.5",
+    "typescript": "5.6.2",
     "undici": "*",
     "vfile": "6.0.1",
     "vite": "5.4.4",
@@ -174,7 +174,7 @@
   "packageManager": "pnpm@9.0.5",
   "pnpm": {
     "overrides": {
-      "typescript": "5.4.5",
+      "typescript": "5.6.2",
       "vfile": "6.0.1",
       "sharp": ">=0.33",
       "@supabase/realtime-js": "2.8.4"
